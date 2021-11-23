@@ -22,17 +22,6 @@
           </q-input>
           <q-input
             required
-            v-model="dataUser.surname"
-            class="col-xl-5 col-lg-5 col-md-5 col-sm-11 col-xs-11"
-            input-class="text-grey-7 text-subtitle1"
-            label-color="primary"
-            placeholder="Sobrenome"
-            rounded
-            standout="bg-accent"
-          >
-          </q-input>
-          <q-input
-            required
             type="email"
             v-model="dataUser.email"
             class="col-xl-5 col-lg-5 col-md-5 col-sm-11 col-xs-11"
@@ -46,15 +35,16 @@
           </q-input>
           <q-input
             required
+            type="text"
             v-model="dataUser.phone"
             class="col-xl-5 col-lg-5 col-md-5 col-sm-11 col-xs-11"
             input-class="text-grey-7 text-subtitle1"
             label-color="primary"
-            placeholder="telefone"
+            placeholder="Telefone"
             rounded
             standout="bg-accent"
-            mask="(##) ##### - ####"
-            fill-mask
+            mask="(##) #####-####"
+            unmasked-value
           >
           </q-input>
           <q-input
@@ -67,14 +57,15 @@
             rounded
             standout="bg-accent"
             mask="###.###.###-##"
-            :rules="[(val) => !!val || 'Campo obrigatório', checkCpf(dataUser.cpf)]"
+            :rules="[(val) => !!val || 'Campo obrigatório', checkCpf]"
             lazy-rules
+            unmasked-value
           >
           </q-input>
           <q-input
             required
             type="date"
-            v-model="dataUser.birthday"
+            v-model="dataUser.birthDate"
             class="col-xl-5 col-lg-5 col-md-5 col-sm-11 col-xs-11"
             input-class="text-grey-7 text-subtitle1"
             label-color="primary"
@@ -161,11 +152,11 @@
       </q-form>
     </q-card>
   </q-dialog>
-
 </template>
 
 <script>
 import { ref } from 'vue'
+import { mapActions } from 'vuex'
 
 export default {
   components: {},
@@ -179,31 +170,74 @@ export default {
       isPwd2: ref(true),
       dataUser: ref({
         name: ref(''),
-        surname: ref(''),
+        cpf: ref(''),
+        birthDate: ref(''),
+        password: ref(''),
         email: ref(''),
         phone: ref(''),
-        cpf: ref(''),
-        birthday: ref(''),
-        password: ref(''),
+        accessLevelId: ref(3),
         confirmPassword: ref(''),
       }),
     }
   },
   methods: {
+    ...mapActions('user', ['createUser']),
     openModalRegistration() {
       this.modalRegistration = true
     },
     closeModalRegistration() {
       this.modalRegistration = false
     },
+    onSubmit () {
+      if (this.dataUser.name !== '' && this.dataUser.cpf !== '' && this.dataUser.birthDate !== '' && this.dataUser.email !== '' && this.dataUser.phone !== '' && this.dataUser.password !== '') {
+        if (this.dataUser.password === this.dataUser.confirmPassword) {
+          delete this.dataUser.confirmPassword
+          this.createUser({
+            data: this.dataUser
+          }).then((res) => {
+            this.$q.notify({
+              position: "bottom",
+              color: "positive",
+              textColor: "white",
+              icon: "check",
+              message: "Usuário criado com sucesso!",
+            })
 
-    onSubmit () {},
-
+            this.closeModalRegistration()
+          }).catch((error) => {
+            this.$q.notify({
+              position: "bottom",
+              color: "negative",
+              textColor: "white",
+              icon: "error",
+              message: error.data.message,
+            })
+          })
+        } else {
+          this.$q.notify({
+            position: "bottom",
+            color: "negative",
+            textColor: "white",
+            icon: "error",
+            message: "As senhas inseridas não conferem!",
+          })
+        }
+      } else {
+        this.$q.notify({
+          position: "bottom",
+          color: "negative",
+          textColor: "white",
+          icon: "error",
+          message: "Preencha todos os campos para realizar o cadastro!",
+        })
+      }
+    },
     checkCpf (cpf) {
       let add
       let rev
       cpf = cpf.replace(/\.|-/g, '')
-      if (cpf === '') return 'CPF inválido!'
+      if (cpf === '') 
+        return 'CPF inválido!'
       // Elimina CPFs invalidos conhecidos
       if (
         cpf.length !== 11 ||
@@ -223,15 +257,20 @@ export default {
       // Check 1o digito
       add = 0
       for (let i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i)
-      rev = 11 - (add % 11)
-      if (rev === 10 || rev === 11) rev = 0
-      if (rev !== parseInt(cpf.charAt(9))) return 'CPF inválido!'
+        rev = 11 - (add % 11)
+      if (rev === 10 || rev === 11) 
+        rev = 0
+      if (rev !== parseInt(cpf.charAt(9))) 
+        return 'CPF inválido!'
       // Check 2o digito
       add = 0
-      for (let i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i)
-      rev = 11 - (add % 11)
-      if (rev === 10 || rev === 11) rev = 0
-      if (rev !== parseInt(cpf.charAt(10))) return 'CPF inválido!'
+      for (let i = 0; i < 10; i++) 
+        add += parseInt(cpf.charAt(i)) * (11 - i)
+        rev = 11 - (add % 11)
+      if (rev === 10 || rev === 11) 
+        rev = 0
+      if (rev !== parseInt(cpf.charAt(10))) 
+      return 'CPF inválido!'
       return true
     }
   }

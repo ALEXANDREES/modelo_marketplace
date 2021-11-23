@@ -102,12 +102,12 @@
 <script>
 import { ref } from 'vue'
 import modalForgotPassword from './modalForgotPassword'
-import ModalRegistration from './modalRegistration.vue'
+import modalRegistration from './modalRegistration.vue'
 
 export default {
   components: {
     modalForgotPassword,
-    ModalRegistration
+    modalRegistration
   },
   name: "modalLogin",
   setup() {

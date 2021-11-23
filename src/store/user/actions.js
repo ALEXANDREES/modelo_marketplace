@@ -4,10 +4,10 @@ import f from "../../functions/index"
 // ROTAS NÃO AUTENTICADAS PELO TOKEN REALIZAM A REQUISIÇÃO COM A IMPORTAÇÃO DA VARIAVEL api
 export function createUser ({ commit }, { data }) {
     return new Promise((resolve, reject) => {
-        api.post('/users', data).then((res) => {
+        api.post('/authentication/registration', data).then((res) => {
             resolve(res)
         }).catch((error) => {
-            reject(error)
+            reject(error.response)
         })
     })
 }
@@ -20,7 +20,7 @@ export function loginUser ({ commit }, { data }) {
             commit('SET_USER_DATA', res.data.user)
             resolve(res)
         }).catch((error) => {
-            reject(error)
+            reject(error.response)
         })
     })
 }
@@ -33,7 +33,7 @@ export function getUser ({ commit }, { id }) {
             commit('SET_USER_DATA', res.data)
             resolve(res)
         }).catch((error) => {
-            reject(error)
+            reject(error.response)
         })
     })
 }
@@ -44,7 +44,7 @@ export function getUsers ({ commit }) {
             commit('SET_LIST_USERS', res.data)
             resolve(res)
         }).catch((error) => {
-            reject(error)
+            reject(error.response)
         })
     })
 }
