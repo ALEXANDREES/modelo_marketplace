@@ -65,6 +65,7 @@
               outlined
               class="col-xl-7 col-lg-9 col-md-9 col-sm-11 col-xs-11"
               label="Login"
+              @click="loginAccess()"
             />
             <span
               :class="activeHoverForget  ? 'text-primary cursor-pointer q-mt-md col-12 text-center'  : 'cursor-pointer q-mt-md col-12 text-center text-grey-8'"
@@ -103,6 +104,7 @@
 import { ref } from 'vue'
 import modalForgotPassword from './modalForgotPassword'
 import modalRegistration from './modalRegistration.vue'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -125,6 +127,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('user', ['loginUser']),
     openModalLogin() {
       this.modalLogin = true
     },
@@ -137,6 +140,56 @@ export default {
     },
     openDialogRegistration() {
       this.$refs.modalRegistration.openModalRegistration()
+    },
+    loginAccess() {
+      if (this.dataLogin.email !== '' && this.dataLogin.password !== '') {
+        this.loginUser({
+          data: this.dataLogin
+        }).then((res) => {
+          if (res.data.user.accessLevelData.type === 'admin'){
+            // FUTURO QUANDO OS ADMINS TIVER UM DASHBOARD PARA AS CONFIGURAÇÕES
+          } else if (res.data.user.accessLevelData.type === 'empresa') {
+            this.$router.replace({ name: 'dashboardAdmin' })  
+          } else if (res.data.user.accessLevelData.type === 'cliente') {
+            // REDIRECIONAR PARA O DASHBOARD DO CLIENTE
+          }
+        }).catch(async (error) => {
+          if (error.status === 400) {
+            this.$q.notify({
+              position: "bottom",
+              color: "negative",
+              textColor: "white",
+              icon: "error",
+              message: JSON.stringify(error.data.errors),
+              timeout: 5000
+            })
+          } else if (error.status === 404) {
+            this.$q.notify({
+              position: "bottom",
+              color: "negative",
+              textColor: "white",
+              icon: "error",
+              message: error.data.message,
+            })
+          } else {
+            this.$q.notify({
+              position: "bottom",
+              color: "negative",
+              textColor: "white",
+              icon: "error",
+              message: 'Não foi posssível realizar login, tente novamente!',
+            })
+          }
+        })
+      } else {
+        this.$q.notify({
+          position: "bottom",
+          color: "negative",
+          textColor: "white",
+          icon: "error",
+          message: "Preencha os campos para realizar o login!",
+        })
+      }
     }
   }
 }
