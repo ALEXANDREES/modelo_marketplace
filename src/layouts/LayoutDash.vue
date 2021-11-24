@@ -5,10 +5,10 @@
         <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
         <q-toolbar-title class="row justify-between">
           <div class="q-pt-lg q-pl-xl">
-            <img width="80" src="/images/logo.png">
+            <img class="cursor-pointer" width="80" src="/images/logo.png" @click="$router.push({ name: 'landingPage' })"/>
           </div>
           <div class="row q-pr-xl items-center q-gutter-x-sm">
-            <q-btn-dropdown v-if="typeUser === 'admin'" color="secondary" no-caps label="Marcos Piemontez" dropdown-icon="coffee">
+            <q-btn-dropdown v-if="getUserData.accessLevelData.type === 'empresa'" color="secondary" no-caps :label="getUserData.name" dropdown-icon="coffee">
               <q-list>
                 <q-item clickable v-close-popup>
                   <q-item-section>
@@ -26,7 +26,7 @@
               </q-list>
             </q-btn-dropdown>
 
-            <q-btn-dropdown v-else color="secondary" no-caps label="Marcos Piemontez" dropdown-icon="coffee">
+            <q-btn-dropdown v-else color="secondary" no-caps :label="getUserData.name" dropdown-icon="coffee">
               <q-list>
                 <q-item clickable v-close-popup>
                   <q-item-section>
@@ -79,6 +79,7 @@
 
 <script>
 import { ref } from 'vue'
+import { mapGetters } from 'vuex'
 import modalLogin from '../components/access/modalLogin'
 
 export default ({
@@ -116,7 +117,9 @@ export default ({
       ]
     }
   },
-
+  computed: {
+    ...mapGetters('user', ['getUserData'])
+  },
   methods: {
     openDialogLogin() {
       this.$refs.modalLogin.openModalLogin()

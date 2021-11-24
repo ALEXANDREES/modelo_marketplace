@@ -18,11 +18,11 @@
             <q-icon size="30px" name="shopping_cart" />
             <q-btn label="Entrar" color="secondary" no-caps @click="openDialogLogin()" />
 
-            <q-btn-dropdown v-if="typeUser === 'admin'" color="secondary" no-caps label="Marcos Piemontez" dropdown-icon="coffee">
+            <q-btn-dropdown v-if="getUserData.accessLevelData.type === 'empresa'" color="secondary" no-caps :label="getUserData.name" dropdown-icon="coffee">
               <q-list>
                 <q-item clickable v-close-popup>
                   <q-item-section>
-                    <q-item-label @click="$router.push({ name: 'dashboardAdmin' })" >Painel de Controle</q-item-label>
+                    <q-item-label @click="$router.push({ name: 'perfil' })" >Painel de Controle</q-item-label>
                   </q-item-section>
                 </q-item>
 
@@ -34,7 +34,7 @@
               </q-list>
             </q-btn-dropdown>
 
-            <q-btn-dropdown v-else color="secondary" no-caps label="Marcos Piemontez" dropdown-icon="coffee">
+            <q-btn-dropdown v-else color="secondary" no-caps :label="getUserData.name" dropdown-icon="coffee">
               <q-list>
                 <q-item clickable v-close-popup>
                   <q-item-section>
@@ -70,6 +70,7 @@
 
 <script>
 import { ref } from 'vue'
+import { mapGetters } from 'vuex'
 import modalLogin from '../components/access/modalLogin'
 
 export default ({
@@ -84,7 +85,9 @@ export default ({
       typeUser: ref('admin')
     }
   },
-
+  computed: {
+    ...mapGetters('user', ['getUserData'])
+  },
   methods: {
     openDialogLogin() {
       this.$refs.modalLogin.openModalLogin()
