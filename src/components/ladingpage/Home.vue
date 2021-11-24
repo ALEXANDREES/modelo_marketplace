@@ -10,7 +10,15 @@
         popularised in the 1960s with the release of Letraset sheets containing
       </p>
       <div class="row col-12">
-        <q-btn size="15px" class="button" color="secondary" no-caps label="Cadastre-se" @click="openDialogRegistration()"/>
+        <q-btn 
+          v-if="getUserData && !getUserData.id"
+          size="15px" 
+          class="button" 
+          color="secondary" 
+          no-caps 
+          label="Cadastre-se" 
+          @click="openDialogRegistration()"
+        />
       </div>
     </div>
 
@@ -21,6 +29,7 @@
 
 <script>
 import modalRegistration from "components/access/modalRegistration"
+import { mapGetters } from 'vuex'
 
 export default {
   name: "Home",
@@ -33,7 +42,9 @@ export default {
 
     }
   },
-
+  computed: {
+    ...mapGetters('user', ['getUserData'])
+  },
   methods: {
     openDialogRegistration() {
       this.$refs.modalRegistration.openModalRegistration()

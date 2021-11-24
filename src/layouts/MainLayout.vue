@@ -16,11 +16,18 @@
           <div class="row q-pr-xl items-center q-gutter-x-sm">
             <q-icon size="30px" name="search" />
             <q-icon size="30px" name="shopping_cart" />
-            <q-btn label="Entrar" color="secondary" no-caps @click="openDialogLogin()" />
+
+            <q-btn 
+              v-if="getUserData && !getUserData.id"
+              label="Entrar" 
+              color="secondary" 
+              no-caps 
+              @click="openDialogLogin()" 
+            />
 
             <q-btn-dropdown 
               v-if="getUserData && getUserData.accessLevelData && getUserData.accessLevelData.type === 'empresa'" 
-              color="secondary" 
+              color="primary" 
               no-caps 
               :label="getUserData.name" 
               dropdown-icon="coffee"
@@ -40,7 +47,13 @@
               </q-list>
             </q-btn-dropdown>
 
-            <q-btn-dropdown v-else color="secondary" no-caps :label="getUserData.name" dropdown-icon="coffee">
+            <q-btn-dropdown 
+              v-else-if="getUserData && getUserData.accessLevelData && getUserData.accessLevelData.type === 'cliente'" 
+              color="secondary" 
+              no-caps 
+              :label="getUserData.name" 
+              dropdown-icon="coffee"
+            >
               <q-list>
                 <q-item clickable v-close-popup>
                   <q-item-section>
@@ -76,7 +89,7 @@
 
 <script>
 import { ref } from 'vue'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import modalLogin from '../components/access/modalLogin'
 
 export default ({
@@ -88,13 +101,31 @@ export default ({
 
   setup () {
     return {
-      typeUser: ref('admin')
+      idUser: ref('')
+    }
+  },
+  async mounted () {
+    this.idUser = this.user.id
+    if (this.idUser !== '' && this.idUser !== null) {
+      await this.getUser({ id: this.idUser }).then((res) => {}).catch((error) => {})
+    } else {
+      await this.getUser({ id: 0 }).then((res) => {}).catch((error) => {
+        this.$q.notify({
+          position: "bottom",
+          color: "negative",
+          textColor: "white",
+          icon: "error",
+          message: error.data.message
+        })
+      })
     }
   },
   computed: {
+    ...mapState('user', ['user']),
     ...mapGetters('user', ['getUserData'])
   },
   methods: {
+    ...mapActions('user', ['getUser']),
     openDialogLogin() {
       this.$refs.modalLogin.openModalLogin()
     }

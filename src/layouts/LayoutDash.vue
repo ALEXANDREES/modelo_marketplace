@@ -10,7 +10,7 @@
           <div class="row q-pr-xl items-center q-gutter-x-sm">
             <q-btn-dropdown 
               v-if="getUserData && getUserData.accessLevelData && getUserData.accessLevelData.type === 'empresa'" 
-              color="secondary" 
+              color="primary" 
               no-caps 
               :label="getUserData.name" 
               dropdown-icon="coffee"

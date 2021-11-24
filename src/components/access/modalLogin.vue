@@ -169,7 +169,7 @@ export default {
               color: "negative",
               textColor: "white",
               icon: "error",
-              message: error.data.message,
+              message: error.data.message
             })
           } else {
             this.$q.notify({
@@ -177,7 +177,7 @@ export default {
               color: "negative",
               textColor: "white",
               icon: "error",
-              message: 'Não foi posssível realizar login, tente novamente!',
+              message: 'Não foi posssível realizar login, tente novamente!'
             })
           }
         })

@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 
 import user from './user'
+import products from './products'
 // import example from './module-example'
 
 /*
@@ -17,14 +18,16 @@ import user from './user'
 export default store(function (/* { ssrContext } */) {
   const Store = createStore({
     modules: {
-      user
+      user,
+      products
     },
     plugins: [
       createPersistedState({
         storage: window.localStorage,
         key: 'marketplace-vuex',
         paths: [
-          'user'
+          'user',
+          'products'
         ]
       })
     ],

@@ -61,21 +61,22 @@ export function getUser ({ commit }, { id }) {
             commit('SET_USER_DATA', data)
             resolve(res)
         }).catch((error) => {
+            commit('SET_USER_DATA', {})
             reject(error.response)
         })
     })
 }
 
-export function getUsers ({ commit }) {
-    return new Promise((resolve, reject) => {
-        f().axiosToken().get('/users/list').then((res) => {
-            commit('SET_LIST_USERS', res.data)
-            resolve(res)
-        }).catch((error) => {
-            reject(error.response)
-        })
-    })
-}
+// export function getUsers ({ commit }) {
+//     return new Promise((resolve, reject) => {
+//         f().axiosToken().get('/users/list').then((res) => {
+//             commit('SET_LIST_USERS', res.data)
+//             resolve(res)
+//         }).catch((error) => {
+//             reject(error.response)
+//         })
+//     })
+// }
 
 export function patchUser ({ dispatch }, { id, data }) {
     return new Promise((resolve, reject) => {
