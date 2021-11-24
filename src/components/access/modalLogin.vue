@@ -149,7 +149,7 @@ export default {
           if (res.data.user.accessLevelData.type === 'admin'){
             // FUTURO QUANDO OS ADMINS TIVER UM DASHBOARD PARA AS CONFIGURAÇÕES
           } else if (res.data.user.accessLevelData.type === 'empresa') {
-            this.$router.replace({ name: 'dashboardAdmin' })  
+            this.$router.replace({ name: 'perfil' })  
           } else if (res.data.user.accessLevelData.type === 'cliente') {
             // REDIRECIONAR PARA O DASHBOARD DO CLIENTE
           }

@@ -8,7 +8,13 @@
             <img class="cursor-pointer" width="80" src="/images/logo.png" @click="$router.push({ name: 'landingPage' })"/>
           </div>
           <div class="row q-pr-xl items-center q-gutter-x-sm">
-            <q-btn-dropdown v-if="getUserData.accessLevelData.type === 'empresa'" color="secondary" no-caps :label="getUserData.name" dropdown-icon="coffee">
+            <q-btn-dropdown 
+              v-if="getUserData && getUserData.accessLevelData && getUserData.accessLevelData.type === 'empresa'" 
+              color="secondary" 
+              no-caps 
+              :label="getUserData.name" 
+              dropdown-icon="coffee"
+            >
               <q-list>
                 <q-item clickable v-close-popup>
                   <q-item-section>

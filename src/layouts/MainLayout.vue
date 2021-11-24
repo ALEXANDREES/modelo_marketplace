@@ -18,7 +18,13 @@
             <q-icon size="30px" name="shopping_cart" />
             <q-btn label="Entrar" color="secondary" no-caps @click="openDialogLogin()" />
 
-            <q-btn-dropdown v-if="getUserData.accessLevelData.type === 'empresa'" color="secondary" no-caps :label="getUserData.name" dropdown-icon="coffee">
+            <q-btn-dropdown 
+              v-if="getUserData && getUserData.accessLevelData && getUserData.accessLevelData.type === 'empresa'" 
+              color="secondary" 
+              no-caps 
+              :label="getUserData.name" 
+              dropdown-icon="coffee"
+            >
               <q-list>
                 <q-item clickable v-close-popup>
                   <q-item-section>
